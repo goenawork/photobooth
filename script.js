@@ -33,9 +33,34 @@ async function runCountdown(){
 
     startSession.disabled = true;
 
-    for(let i=3;i>=1;i--){
+    capturedPhotos = [];
 
-        countdown.textContent = i;
+    for(let pose=1;pose<=4;pose++){
+
+        statusText.textContent =
+            `Pose ${pose} dari 4`;
+
+        for(let i=3;i>=1;i--){
+
+            countdown.textContent = i;
+
+            await new Promise(resolve =>
+                setTimeout(resolve,1000)
+            );
+
+        }
+
+        countdown.textContent = "📸";
+
+        await new Promise(resolve =>
+            setTimeout(resolve,500)
+        );
+
+        capturedPhotos.push(
+            takePhoto()
+        );
+
+        countdown.textContent = "";
 
         await new Promise(resolve =>
             setTimeout(resolve,1000)
@@ -43,9 +68,10 @@ async function runCountdown(){
 
     }
 
-    countdown.textContent = "";
+    statusText.textContent =
+        "Selesai";
 
-    takePhoto();
+    createStrip();
 
     startSession.disabled = false;
 }
@@ -60,13 +86,51 @@ function takePhoto(){
         canvas.height
     );
 
-    const image =
-        canvas.toDataURL("image/png");
-
-    photo.src = image;
-
+    return canvas.toDataURL("image/png");
 }
+async function createStrip(){
 
+    const stripCanvas =
+        document.createElement("canvas");
+
+    const stripCtx =
+        stripCanvas.getContext("2d");
+
+    const width = 640;
+    const height = 480;
+
+    stripCanvas.width = width;
+    stripCanvas.height = height * 4;
+
+    for(let i=0;i<capturedPhotos.length;i++){
+
+        const img = new Image();
+
+        await new Promise(resolve => {
+
+            img.onload = () => {
+
+                stripCtx.drawImage(
+                    img,
+                    0,
+                    i * height,
+                    width,
+                    height
+                );
+
+                resolve();
+
+            };
+
+            img.src = capturedPhotos[i];
+
+        });
+
+    }
+
+    photo.src =
+        stripCanvas.toDataURL("image/png");
+}
 startSession.addEventListener(
     "click",
     runCountdown
