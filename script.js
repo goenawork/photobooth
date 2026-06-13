@@ -1,51 +1,71 @@
+// =====================
+// ELEMENT HTML
+// =====================
+
 const video = document.getElementById("video");
 const startSession = document.getElementById("startSession");
 
 const countdown = document.getElementById("countdown");
+const statusText = document.getElementById("status");
 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
 const photo = document.getElementById("photo");
 
-async function startCamera(){
+const downloadBtn = document.getElementById("downloadBtn");
 
-    try{
+// =====================
+// DATA
+// =====================
 
-        const stream =
-            await navigator.mediaDevices.getUserMedia({
-                video:true
-            });
+let capturedPhotos = [];
+let finalStripImage = "";
+
+// =====================
+// CAMERA
+// =====================
+
+async function startCamera() {
+
+    try {
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: true
+        });
 
         video.srcObject = stream;
 
-    }catch(error){
+    } catch (error) {
 
+        console.error(error);
         alert("Tidak dapat mengakses kamera");
 
     }
 
 }
 
-startCamera();
+// =====================
+// PHOTO SESSION
+// =====================
 
-async function runCountdown(){
+async function runCountdown() {
 
     startSession.disabled = true;
+    downloadBtn.style.display = "none";
 
     capturedPhotos = [];
 
-    for(let pose=1;pose<=4;pose++){
+    for (let pose = 1; pose <= 4; pose++) {
 
-        statusText.textContent =
-            `Pose ${pose} dari 4`;
+        statusText.textContent = `Pose ${pose} dari 4`;
 
-        for(let i=3;i>=1;i--){
+        for (let i = 3; i >= 1; i--) {
 
             countdown.textContent = i;
 
             await new Promise(resolve =>
-                setTimeout(resolve,1000)
+                setTimeout(resolve, 1000)
             );
 
         }
@@ -53,7 +73,7 @@ async function runCountdown(){
         countdown.textContent = "📸";
 
         await new Promise(resolve =>
-            setTimeout(resolve,500)
+            setTimeout(resolve, 500)
         );
 
         capturedPhotos.push(
@@ -63,20 +83,24 @@ async function runCountdown(){
         countdown.textContent = "";
 
         await new Promise(resolve =>
-            setTimeout(resolve,1000)
+            setTimeout(resolve, 1000)
         );
 
     }
 
-    statusText.textContent =
-        "Selesai";
+    statusText.textContent = "Selesai";
 
-    createStrip();
+    await createStrip();
 
     startSession.disabled = false;
+
 }
 
-function takePhoto(){
+// =====================
+// CAPTURE PHOTO
+// =====================
+
+function takePhoto() {
 
     ctx.drawImage(
         video,
@@ -87,8 +111,14 @@ function takePhoto(){
     );
 
     return canvas.toDataURL("image/png");
+
 }
-async function createStrip(){
+
+// =====================
+// CREATE PHOTO STRIP
+// =====================
+
+async function createStrip() {
 
     const stripCanvas =
         document.createElement("canvas");
@@ -102,7 +132,7 @@ async function createStrip(){
     stripCanvas.width = width;
     stripCanvas.height = height * 4;
 
-    for(let i=0;i<capturedPhotos.length;i++){
+    for (let i = 0; i < capturedPhotos.length; i++) {
 
         const img = new Image();
 
@@ -128,28 +158,20 @@ async function createStrip(){
 
     }
 
-finalStripImage =
-    stripCanvas.toDataURL("image/png");
+    finalStripImage =
+        stripCanvas.toDataURL("image/png");
 
-photo.src = finalStripImage;
+    photo.src = finalStripImage;
 
-downloadBtn.style.display = "inline-block";
+    downloadBtn.style.display = "inline-block";
+
 }
-startSession.addEventListener(
-    "click",
-    runCountdown
-);
-const statusText =
-    document.getElementById("status");
 
-let capturedPhotos = [];
+// =====================
+// DOWNLOAD
+// =====================
 
-const downloadBtn =
-    document.getElementById("downloadBtn");
-
-let finalStripImage = "";
-
-function downloadStrip(){
+function downloadStrip() {
 
     const link =
         document.createElement("a");
@@ -162,7 +184,23 @@ function downloadStrip(){
     link.click();
 
 }
+
+// =====================
+// EVENTS
+// =====================
+
+startSession.addEventListener(
+    "click",
+    runCountdown
+);
+
 downloadBtn.addEventListener(
     "click",
     downloadStrip
 );
+
+// =====================
+// START APP
+// =====================
+
+startCamera();
