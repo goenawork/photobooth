@@ -71,3 +71,7 @@ startSession.addEventListener(
     "click",
     runCountdown
 );
+const statusText =
+    document.getElementById("status");
+
+let capturedPhotos = [];
