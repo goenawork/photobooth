@@ -1,6 +1,29 @@
 photobooth/
 │
 ├── index.html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Photobooth</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Photobooth</h1>
+
+    <video id="video" autoplay playsinline></video>
+
+    <br>
+
+    <button id="startCamera">
+        Aktifkan Kamera
+    </button>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
 ├── style.css
 ├── script.js
 └── assets/
