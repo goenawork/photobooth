@@ -90,7 +90,11 @@ async function runCountdown() {
 
     statusText.textContent = "Selesai";
 
-    await createStrip();
+    const selectedTemplate =
+    templateSelect.value;
+
+const templatePath =
+    `assets/templates/${selectedTemplate}.png`;
 
     startSession.disabled = false;
 
