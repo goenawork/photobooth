@@ -4,9 +4,7 @@ photobooth/
 ├── style.css
 ├── script.js
 │
-├── assets/
-│   ├── logo.png
-│   ├── frame.png
-│   └── bg.jpg
-│
-└── photos/
+└── assets/
+    └── templates/
+        ├── MSC-001.png
+        └── MSC-002.png
