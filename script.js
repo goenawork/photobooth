@@ -90,7 +90,7 @@ async function runCountdown() {
 
     statusText.textContent = "Menyusun hasil foto...";
 
-    await createStrip();
+    await createTemplate();
 
     statusText.textContent = "Selesai";
 
@@ -120,19 +120,47 @@ function takePhoto() {
 // CREATE PHOTO STRIP
 // =====================
 
-async function createStrip() {
+async function createTemplate() {
 
-    const stripCanvas =
+    const selected =
+        templateSelect.value;
+
+    const template =
+        templates[selected];
+
+    const finalCanvas =
         document.createElement("canvas");
 
-    const stripCtx =
-        stripCanvas.getContext("2d");
+    const finalCtx =
+        finalCanvas.getContext("2d");
 
-    const width = 640;
-    const height = 480;
+    finalCanvas.width = 1200;
+    finalCanvas.height = 1800;
 
-    stripCanvas.width = width;
-    stripCanvas.height = height * 4;
+    // background putih
+    finalCtx.fillStyle = "#ffffff";
+    finalCtx.fillRect(
+        0,
+        0,
+        finalCanvas.width,
+        finalCanvas.height
+    );
+
+    // =====================
+    // FOTO SLOT
+    // =====================
+
+    const slots = [
+
+        { x: 80, y: 190, w: 1040, h: 280 },
+
+        { x: 80, y: 510, w: 1040, h: 280 },
+
+        { x: 80, y: 830, w: 1040, h: 280 },
+
+        { x: 80, y: 1150, w: 1040, h: 280 }
+
+    ];
 
     for (let i = 0; i < capturedPhotos.length; i++) {
 
@@ -142,12 +170,12 @@ async function createStrip() {
 
             img.onload = () => {
 
-                stripCtx.drawImage(
+                finalCtx.drawImage(
                     img,
-                    0,
-                    i * height,
-                    width,
-                    height
+                    slots[i].x,
+                    slots[i].y,
+                    slots[i].w,
+                    slots[i].h
                 );
 
                 resolve();
@@ -160,12 +188,41 @@ async function createStrip() {
 
     }
 
+    // =====================
+    // TEMPLATE PNG
+    // =====================
+
+    const frame =
+        new Image();
+
+    await new Promise(resolve => {
+
+        frame.onload = () => {
+
+            finalCtx.drawImage(
+                frame,
+                0,
+                0,
+                1200,
+                1800
+            );
+
+            resolve();
+
+        };
+
+        frame.src = template.file;
+
+    });
+
     finalStripImage =
-        stripCanvas.toDataURL("image/png");
+        finalCanvas.toDataURL("image/png");
 
-    photo.src = finalStripImage;
+    photo.src =
+        finalStripImage;
 
-    downloadBtn.style.display = "inline-block";
+    downloadBtn.style.display =
+        "inline-block";
 
 }
 
