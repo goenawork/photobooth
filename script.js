@@ -2,104 +2,135 @@
 // ELEMENT HTML
 // =====================
 
-const video = document.getElementById("video");
-const startSession = document.getElementById("startSession");
+const video =
+    document.getElementById("video");
 
-const countdown = document.getElementById("countdown");
-const statusText = document.getElementById("status");
+const canvas =
+    document.getElementById("canvas");
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const ctx =
+    canvas.getContext("2d");
 
-const photo = document.getElementById("photo");
+const startSession =
+    document.getElementById("startSession");
 
-const downloadBtn = document.getElementById("downloadBtn");
+const countdown =
+    document.getElementById("countdown");
 
-const templateSelect = document.getElementById("templateSelect");
+const statusText =
+    document.getElementById("status");
+
+const photo =
+    document.getElementById("photo");
+
+const downloadBtn =
+    document.getElementById("downloadBtn");
+
+const templateSelect =
+    document.getElementById("templateSelect");
 
 // =====================
 // DATA
 // =====================
 
 let capturedPhotos = [];
+
 let finalStripImage = "";
+
+// =====================
+// TEMPLATE CONFIG
+// =====================
+
+const templates = {
+
+    "MSC-001": {
+
+        file:
+            "assets/templates/MSC-001.png",
+
+        slots: [
+
+            { x: 80, y: 190, w: 1040, h: 280 },
+
+            { x: 80, y: 510, w: 1040, h: 280 },
+
+            { x: 80, y: 830, w: 1040, h: 280 },
+
+            { x: 80, y: 1150, w: 1040, h: 280 }
+
+        ]
+
+    },
+
+    "MSC-002": {
+
+        file:
+            "assets/templates/MSC-002.png",
+
+        slots: [
+
+            { x: 80, y: 190, w: 1040, h: 280 },
+
+            { x: 80, y: 510, w: 1040, h: 280 },
+
+            { x: 80, y: 830, w: 1040, h: 280 },
+
+            { x: 80, y: 1150, w: 1040, h: 280 }
+
+        ]
+
+    },
+
+    "MSC-003": {
+
+        file:
+            "assets/templates/MSC-003.png",
+
+        slots: [
+
+            { x: 170, y: 245, w: 350, h: 560 },
+
+            { x: 580, y: 245, w: 350, h: 560 },
+
+            { x: 170, y: 845, w: 350, h: 560 },
+
+            { x: 580, y: 845, w: 350, h: 560 }
+
+        ]
+
+    }
+
+};
 
 // =====================
 // CAMERA
 // =====================
 
 async function startCamera() {
+
     try {
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: true
-        });
+        const stream =
+            await navigator.mediaDevices.getUserMedia({
+                video: true
+            });
 
         video.srcObject = stream;
 
     } catch (error) {
 
         console.error(error);
-        alert("Tidak dapat mengakses kamera");
 
-    }
-}
-
-// =====================
-// PHOTO SESSION
-// =====================
-
-async function runCountdown() {
-
-    startSession.disabled = true;
-    downloadBtn.style.display = "none";
-
-    capturedPhotos = [];
-
-    for (let pose = 1; pose <= 4; pose++) {
-
-        statusText.textContent = `Pose ${pose} dari 4`;
-
-        for (let i = 3; i >= 1; i--) {
-
-            countdown.textContent = i;
-
-            await new Promise(resolve =>
-                setTimeout(resolve, 1000)
-            );
-
-        }
-
-        countdown.textContent = "📸";
-
-        await new Promise(resolve =>
-            setTimeout(resolve, 500)
-        );
-
-        capturedPhotos.push(
-            takePhoto()
-        );
-
-        countdown.textContent = "";
-
-        await new Promise(resolve =>
-            setTimeout(resolve, 1000)
+        alert(
+            "Tidak dapat mengakses kamera"
         );
 
     }
 
-    statusText.textContent = "Menyusun hasil foto...";
-
-    await createTemplate();
-
-    statusText.textContent = "Selesai";
-
-    startSession.disabled = false;
-
 }
 
 // =====================
-// CAPTURE PHOTO
+// TAKE PHOTO
 // =====================
 
 function takePhoto() {
@@ -112,12 +143,55 @@ function takePhoto() {
         canvas.height
     );
 
-    return canvas.toDataURL("image/png");
+    return canvas.toDataURL(
+        "image/png"
+    );
 
 }
 
 // =====================
-// CREATE PHOTO STRIP
+// DRAW COVER
+// =====================
+
+function drawCover(
+    ctx,
+    img,
+    x,
+    y,
+    w,
+    h
+) {
+
+    const scale =
+        Math.max(
+            w / img.width,
+            h / img.height
+        );
+
+    const newWidth =
+        img.width * scale;
+
+    const newHeight =
+        img.height * scale;
+
+    const offsetX =
+        (w - newWidth) / 2;
+
+    const offsetY =
+        (h - newHeight) / 2;
+
+    ctx.drawImage(
+        img,
+        x + offsetX,
+        y + offsetY,
+        newWidth,
+        newHeight
+    );
+
+}
+
+// =====================
+// CREATE TEMPLATE
 // =====================
 
 async function createTemplate() {
@@ -129,7 +203,9 @@ async function createTemplate() {
         templates[selected];
 
     const finalCanvas =
-        document.createElement("canvas");
+        document.createElement(
+            "canvas"
+        );
 
     const finalCtx =
         finalCanvas.getContext("2d");
@@ -137,107 +213,95 @@ async function createTemplate() {
     finalCanvas.width = 1200;
     finalCanvas.height = 1800;
 
-    // background putih
-    finalCtx.fillStyle = "#ffffff";
+    finalCtx.fillStyle =
+        "#ffffff";
+
     finalCtx.fillRect(
-        0,
-        0,
-        finalCanvas.width,
-        finalCanvas.height
-    );
-
-    // =====================
-    // FOTO SLOT
-    // =====================
-
-    const slots = [
-
-        { x: 80, y: 190, w: 1040, h: 280 },
-
-        { x: 80, y: 510, w: 1040, h: 280 },
-
-        { x: 80, y: 830, w: 1040, h: 280 },
-
-        { x: 80, y: 1150, w: 1040, h: 280 }
-
-    ];
-
-    for (let i = 0; i < capturedPhotos.length; i++) {
-
-        const img = new Image();
-
-        await new Promise(resolve => {
-
-            img.onload = () => {
-
-                finalCtx.drawImage(
-                    img,
-                    slots[i].x,
-                    slots[i].y,
-                    slots[i].w,
-                    slots[i].h
-                );
-
-                resolve();
-
-            };
-
-            img.src = capturedPhotos[i];
-
-        });
-
-    }
-
-    // =====================
-    // TEMPLATE PNG
-    // =====================
-
-    const frame =
-        new Image();
-
-    await new Promise(resolve => {
-
-        frame.onload = () => {
-
-            finalCtx.drawImage(
-                frame,
-                0,
-                0,
-                1200,
-                1800
-            );
-
-            resolve();
-
-        };
-console.log(template.file);
-
-frame.onload = () => {
-
-    console.log("Template berhasil dimuat");
-
-    finalCtx.drawImage(
-        frame,
         0,
         0,
         1200,
         1800
     );
 
-    resolve();
+    // FOTO
 
-};
+    for (
+        let i = 0;
+        i < capturedPhotos.length;
+        i++
+    ) {
 
-frame.onerror = () => {
-    console.error("Template gagal dimuat");
-};
+        const img =
+            new Image();
 
-frame.src = template.file;
+        await new Promise(
+            resolve => {
 
-    });
+                img.onload = () => {
+
+                    drawCover(
+                        finalCtx,
+                        img,
+                        template.slots[i].x,
+                        template.slots[i].y,
+                        template.slots[i].w,
+                        template.slots[i].h
+                    );
+
+                    resolve();
+
+                };
+
+                img.src =
+                    capturedPhotos[i];
+
+            }
+        );
+
+    }
+
+    // TEMPLATE PNG
+
+    const frame =
+        new Image();
+
+    await new Promise(
+        resolve => {
+
+            frame.onload = () => {
+
+                finalCtx.drawImage(
+                    frame,
+                    0,
+                    0,
+                    1200,
+                    1800
+                );
+
+                resolve();
+
+            };
+
+            frame.onerror = () => {
+
+                console.error(
+                    "Template gagal dimuat"
+                );
+
+                resolve();
+
+            };
+
+            frame.src =
+                template.file;
+
+        }
+    );
 
     finalStripImage =
-        finalCanvas.toDataURL("image/png");
+        finalCanvas.toDataURL(
+            "image/png"
+        );
 
     photo.src =
         finalStripImage;
@@ -248,15 +312,101 @@ frame.src = template.file;
 }
 
 // =====================
+// PHOTO SESSION
+// =====================
+
+async function runCountdown() {
+
+    startSession.disabled =
+        true;
+
+    downloadBtn.style.display =
+        "none";
+
+    capturedPhotos = [];
+
+    for (
+        let pose = 1;
+        pose <= 4;
+        pose++
+    ) {
+
+        statusText.textContent =
+            `Pose ${pose} dari 4`;
+
+        for (
+            let i = 3;
+            i >= 1;
+            i--
+        ) {
+
+            countdown.textContent =
+                i;
+
+            await new Promise(
+                resolve =>
+                    setTimeout(
+                        resolve,
+                        1000
+                    )
+            );
+
+        }
+
+        countdown.textContent =
+            "📸";
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    500
+                )
+        );
+
+        capturedPhotos.push(
+            takePhoto()
+        );
+
+        countdown.textContent =
+            "";
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    1000
+                )
+        );
+
+    }
+
+    statusText.textContent =
+        "Menyusun hasil...";
+
+    await createTemplate();
+
+    statusText.textContent =
+        "Selesai";
+
+    startSession.disabled =
+        false;
+
+}
+
+// =====================
 // DOWNLOAD
 // =====================
 
 function downloadStrip() {
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
-    link.href = finalStripImage;
+    link.href =
+        finalStripImage;
 
     link.download =
         `photobooth-${Date.now()}.png`;
@@ -284,14 +434,3 @@ downloadBtn.addEventListener(
 // =====================
 
 startCamera();
-const templates = {
-
-    "MSC-001": {
-        file: "assets/templates/MSC-001.png"
-    },
-
-    "MSC-002": {
-        file: "assets/templates/MSC-002.png"
-    }
-
-};
