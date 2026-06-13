@@ -210,8 +210,29 @@ async function createTemplate() {
             resolve();
 
         };
+console.log(template.file);
 
-        frame.src = template.file;
+frame.onload = () => {
+
+    console.log("Template berhasil dimuat");
+
+    finalCtx.drawImage(
+        frame,
+        0,
+        0,
+        1200,
+        1800
+    );
+
+    resolve();
+
+};
+
+frame.onerror = () => {
+    console.error("Template gagal dimuat");
+};
+
+frame.src = template.file;
 
     });
 
