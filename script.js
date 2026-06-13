@@ -148,7 +148,7 @@ const downloadBtn =
     document.getElementById("downloadBtn");
 
 let finalStripImage = "";
-}
+
 function downloadStrip(){
 
     const link =
