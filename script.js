@@ -128,8 +128,12 @@ async function createStrip(){
 
     }
 
-    photo.src =
-        stripCanvas.toDataURL("image/png");
+finalStripImage =
+    stripCanvas.toDataURL("image/png");
+
+photo.src = finalStripImage;
+
+downloadBtn.style.display = "inline-block";
 }
 startSession.addEventListener(
     "click",
@@ -139,3 +143,26 @@ const statusText =
     document.getElementById("status");
 
 let capturedPhotos = [];
+
+const downloadBtn =
+    document.getElementById("downloadBtn");
+
+let finalStripImage = "";
+}
+function downloadStrip(){
+
+    const link =
+        document.createElement("a");
+
+    link.href = finalStripImage;
+
+    link.download =
+        `photobooth-${Date.now()}.png`;
+
+    link.click();
+
+}
+downloadBtn.addEventListener(
+    "click",
+    downloadStrip
+);
