@@ -1,9 +1,16 @@
 const video = document.getElementById("video");
-const button = document.getElementById("startCamera");
+const startSession = document.getElementById("startSession");
 
-button.addEventListener("click", async () => {
+const countdown = document.getElementById("countdown");
 
-    try {
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const photo = document.getElementById("photo");
+
+async function startCamera(){
+
+    try{
 
         const stream =
             await navigator.mediaDevices.getUserMedia({
@@ -12,45 +19,38 @@ button.addEventListener("click", async () => {
 
         video.srcObject = stream;
 
-    } catch(error) {
+    }catch(error){
 
-        alert("Kamera tidak dapat diakses");
-
-        console.error(error);
-    }
-
-});
-const video = document.getElementById("video");
-const startCamera = document.getElementById("startCamera");
-
-const takePhoto = document.getElementById("takePhoto");
-
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-const photo = document.getElementById("photo");
-
-startCamera.addEventListener("click", async () => {
-
-    try {
-
-        const stream =
-            await navigator.mediaDevices.getUserMedia({
-                video: true
-            });
-
-        video.srcObject = stream;
-
-    } catch(err) {
-
-        alert("Kamera tidak dapat diakses");
-        console.error(err);
+        alert("Tidak dapat mengakses kamera");
 
     }
 
-});
+}
 
-takePhoto.addEventListener("click", () => {
+startCamera();
+
+async function runCountdown(){
+
+    startSession.disabled = true;
+
+    for(let i=3;i>=1;i--){
+
+        countdown.textContent = i;
+
+        await new Promise(resolve =>
+            setTimeout(resolve,1000)
+        );
+
+    }
+
+    countdown.textContent = "";
+
+    takePhoto();
+
+    startSession.disabled = false;
+}
+
+function takePhoto(){
 
     ctx.drawImage(
         video,
@@ -60,9 +60,14 @@ takePhoto.addEventListener("click", () => {
         canvas.height
     );
 
-    const imageData =
+    const image =
         canvas.toDataURL("image/png");
 
-    photo.src = imageData;
+    photo.src = image;
 
-});
+}
+
+startSession.addEventListener(
+    "click",
+    runCountdown
+);
