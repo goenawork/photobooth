@@ -3,5 +3,10 @@ photobooth/
 ├── index.html
 ├── style.css
 ├── script.js
-└── assets/
-    └── frame.png
+│
+├── assets/
+│   ├── logo.png
+│   ├── frame.png
+│   └── bg.jpg
+│
+└── photos/
