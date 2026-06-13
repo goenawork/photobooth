@@ -8,29 +8,35 @@
 </head>
 <body>
 
-    <h1>Photobooth</h1>
+<div class="container">
 
-    <video id="video" autoplay playsinline></video>
+    <h1>PHOTOBOOTH</h1>
 
-    <br>
+    <div class="camera-box">
 
-    <button id="startCamera">
-        Aktifkan Kamera
+        <video id="video" autoplay playsinline></video>
+
+        <div id="countdown"></div>
+
+    </div>
+
+    <button id="startSession">
+        Mulai Sesi
     </button>
-
-    <button id="takePhoto">
-        Ambil Foto
-    </button>
-
-    <br><br>
 
     <canvas id="canvas" width="640" height="480"></canvas>
 
-    <h2>Hasil Foto</h2>
+    <div class="result">
 
-    <img id="photo" alt="Hasil Foto">
+        <h2>Hasil Foto</h2>
 
-    <script src="script.js"></script>
+        <img id="photo">
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
