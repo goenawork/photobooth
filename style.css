@@ -9,3 +9,28 @@ video{
     max-width:100%;
     border-radius:12px;
 }
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    padding:20px;
+}
+
+video,
+canvas,
+img{
+    width:640px;
+    max-width:90%;
+    border-radius:12px;
+    border:1px solid #ccc;
+}
+
+button{
+    margin:10px;
+    padding:12px 20px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+canvas{
+    display:none;
+}
