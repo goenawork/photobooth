@@ -15,6 +15,8 @@ const photo = document.getElementById("photo");
 
 const downloadBtn = document.getElementById("downloadBtn");
 
+const templateSelect = document.getElementById("templateSelect");
+
 // =====================
 // DATA
 // =====================
@@ -27,7 +29,6 @@ let finalStripImage = "";
 // =====================
 
 async function startCamera() {
-
     try {
 
         const stream = await navigator.mediaDevices.getUserMedia({
@@ -42,7 +43,6 @@ async function startCamera() {
         alert("Tidak dapat mengakses kamera");
 
     }
-
 }
 
 // =====================
@@ -88,13 +88,11 @@ async function runCountdown() {
 
     }
 
+    statusText.textContent = "Menyusun hasil foto...";
+
+    await createStrip();
+
     statusText.textContent = "Selesai";
-
-    const selectedTemplate =
-    templateSelect.value;
-
-const templatePath =
-    `assets/templates/${selectedTemplate}.png`;
 
     startSession.disabled = false;
 
@@ -208,6 +206,3 @@ downloadBtn.addEventListener(
 // =====================
 
 startCamera();
-
-const templateSelect =
-    document.getElementById("templateSelect");
