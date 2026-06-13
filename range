@@ -1,0 +1,7 @@
+photobooth/
+│
+├── index.html
+├── style.css
+├── script.js
+└── assets/
+    └── frame.png
