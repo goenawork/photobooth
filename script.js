@@ -204,3 +204,6 @@ downloadBtn.addEventListener(
 // =====================
 
 startCamera();
+
+const templateSelect =
+    document.getElementById("templateSelect");
