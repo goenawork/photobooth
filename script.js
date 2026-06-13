@@ -206,3 +206,14 @@ downloadBtn.addEventListener(
 // =====================
 
 startCamera();
+const templates = {
+
+    "MSC-001": {
+        file: "assets/templates/MSC-001.png"
+    },
+
+    "MSC-002": {
+        file: "assets/templates/MSC-002.png"
+    }
+
+};
