@@ -88,15 +88,15 @@ const templates = {
 
         slots: [
 
-            { x: 170, y: 245, w: 350, h: 560 },
+    { x: 170, y: 245, w: 390, h: 540 },
 
-            { x: 580, y: 245, w: 350, h: 560 },
+    { x: 640, y: 245, w: 390, h: 540 },
 
-            { x: 170, y: 845, w: 350, h: 560 },
+    { x: 170, y: 860, w: 390, h: 540 },
 
-            { x: 580, y: 845, w: 350, h: 560 }
+    { x: 640, y: 860, w: 390, h: 540 }
 
-        ]
+]
 
     }
 
@@ -162,30 +162,53 @@ function drawCover(
     h
 ) {
 
-    const scale =
-        Math.max(
-            w / img.width,
-            h / img.height
-        );
+    const imageRatio =
+        img.width / img.height;
 
-    const newWidth =
-        img.width * scale;
+    const frameRatio =
+        w / h;
 
-    const newHeight =
-        img.height * scale;
+    let sx;
+    let sy;
+    let sWidth;
+    let sHeight;
 
-    const offsetX =
-        (w - newWidth) / 2;
+    if (imageRatio > frameRatio) {
 
-    const offsetY =
-        (h - newHeight) / 2;
+        sHeight = img.height;
+
+        sWidth =
+            sHeight * frameRatio;
+
+        sx =
+            (img.width - sWidth) / 2;
+
+        sy = 0;
+
+    } else {
+
+        sWidth = img.width;
+
+        sHeight =
+            sWidth / frameRatio;
+
+        sx = 0;
+
+        sy =
+            (img.height - sHeight) / 2;
+
+    }
 
     ctx.drawImage(
         img,
-        x + offsetX,
-        y + offsetY,
-        newWidth,
-        newHeight
+        sx,
+        sy,
+        sWidth,
+        sHeight,
+        x,
+        y,
+        w,
+        h
     );
 
 }
